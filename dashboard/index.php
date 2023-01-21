@@ -23,12 +23,16 @@ if (isset($_POST['logout'])) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style-dashboard.css">
+  <link type="text/css" rel="stylesheet" href="style-dashboard.css">
   <title>DASHBOARD</title>
 </head>
 
 <body>
-  <h3>Dashboard</h3>
+  <nav>
+    <a href="index.php?page=absensi">Dashboard</a> |
+    <a href="index.php?page=izin">Izin</a>
+  </nav>
+
   <p>
     <?php
     if (isset($_GET['message'])) {
@@ -36,17 +40,29 @@ if (isset($_POST['logout'])) {
     }
     ?>
   </p>
+
   <i>Halo <?= $nama_lengkap ?></i>
   <p>Status kepegawaian: <?= $role ?></p>
   <br />
 
-  <!-- showing table absensi -->
-  <?php include('absensi.php') ?>
-
-  <form action="" method="POST">
-    <button type="submit" name="logout">logout</button>
-  </form>
-
+  <div class="container">
+    <!-- showing page from data get -->
+    <?php
+    $paramater = $_GET['page'];
+    if ($paramater == "izin") {
+      include('izin.php');
+    } elseif ($paramater == "absensi") {
+      include('absensi.php');
+    } elseif ($paramater == "request") {
+      include('request.php');
+    } else {
+      include('absensi.php');
+    };
+    ?>
+    <form action="" method="POST">
+      <button type="submit" name="logout">logout</button>
+    </form>
+  </div>
 </body>
 
 </html>

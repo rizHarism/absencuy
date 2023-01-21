@@ -4,7 +4,6 @@ include("connection.php");
 include("user_class.php");
 
 $user = new Users();
-
 if (isset($_POST['login'])) {
 
     $user->set_login_data($_POST['user_id'], $_POST['password']);
@@ -21,6 +20,17 @@ if (isset($_POST['login'])) {
             $_SESSION['nama_lengkap'] = $data['nama_lengkap'];
             $_SESSION['role'] = $data['role'];
             $_SESSION['status'] = "login";
+
+            date_default_timezone_set("Asia/Jakarta");
+
+            $tgl = date('Y-m-d');
+            $check_absen = "SELECT * FROM absensi where user_id='$user_id' and tgl = '$tgl'";
+            $check = $db->query($check_absen);
+            if ($check->num_rows == 0) {
+                $sql = "INSERT INTO absensi (`id`, `user_id`, `tgl`, `jam_masuk`, `jam_keluar`) VALUES (NULL, '$user_id', '$tgl', NULL, NULL)";
+                $result = $db->query($sql);
+            }
+
             if ($data['role'] == "admin") {
                 header("location:dashboard/index-admin.php?message=selamat datang administrator");
             } else {

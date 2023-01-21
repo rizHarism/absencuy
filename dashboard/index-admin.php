@@ -1,5 +1,15 @@
 <?php
-echo "hello bro admin";
+session_start();
+$status = $_SESSION['status'];
+
+if ($status != "login") {
+    header("location:../index.php?message=silahkan login terlebih dahulu!");
+}
+
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("location:../index.php?message=Terimakasih sudah berkunjung");
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,47 +23,50 @@ echo "hello bro admin";
     <title>Dashboar Admin</title>
 </head>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <body>
-    <div>
+    <nav>
+        <a href="index-admin.php?page=muser">Management Users</a> |
+        <a href="index-admin.php?page=mabsensi">Management Absensi</a> |
+        <a href="index-admin.php?page=mrequest">Management Perizinan</a>
+    </nav>
+    <p>
         <?php
         if (isset($_GET['message'])) {
             echo $_GET['message'];
         }
         ?>
-        <table class="table">
-            <tr class="tr">
-                <th class="th">No.</th>
-                <th class="th">Nama</th>
-                <th class="th">Jabatan</th>
-                <th class="th">Tanggal</th>
-                <th class="th">Clock In</th>
-                <th class="th">Clock Out</th>
-            </tr>
+    </p>
+    <?php
 
-            <?php
-            include("../connection.php");
-            session_start();
-            $user_id = $_SESSION['user_id'];
+    $parameter = $_GET['page'];
+    if ($parameter == "muser") {
+        include('../management/users.php');
+    } elseif ($parameter == "mabsensi") {
+        include('../management/absen.php');
+    } elseif ($parameter == "mrequest") {
+        include('../management/izin.php');
+    } else {
+        include('../management/users.php');
+    };
+    ?>
 
-            $sql = "SELECT * FROM users JOIN absensi ON users.user_id = absensi.user_id";
-            $result = $db->query($sql);
-            $no = 1;
-            while ($data = $result->fetch_assoc()) {
-                echo "<tr class='tr'>";
-                echo "<td class='td'>" . $no++ . "</td>";
-                echo "<td class='td'>" . $data['nama_lengkap'] . "</td>";
-                echo "<td class='td'>" . $data['role'] . "</td>";
-                echo "<td class='td'>" . $data['tgl'] . "</td>";
-                echo "<td class='td'>" . $data['jam_masuk'] . "</td>";
-                echo "<td class='td'>" . $data['jam_keluar'] . "</td>";
-                echo "</tr>";
-            }
-            ?>
-        </table>
-        <div style="display: flex; justify-content:center;align-items:center; margin-top: 20px;">
-            <button style="text-align: center;" onclick="window.print()">Print Laporan</button>
-        </div>
-    </div>
+    <form action="" method="POST">
+        <button type="submit" name="logout">logout</button>
+    </form>
 </body>
 
 </html>
